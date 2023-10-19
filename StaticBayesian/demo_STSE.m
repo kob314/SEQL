@@ -7,11 +7,7 @@ set(0,'DefaultFigureWindowStyle','docked')
 
 %% load in data
 
-curren_dir  = pwd;
-idcs   = strfind(curren_dir,'\');
-parent_dir = curren_dir(1:idcs(end)-1);
-addpath([parent_dir,'\General'])
-
+include_General
 data_ = data_reader;
 
 o.exp_type_v = [1 6 7 4 3 2];

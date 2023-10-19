@@ -2,19 +2,14 @@ clear all
 close all
 set(0,'DefaultFigureWindowStyle','docked')
 
-% load...
-% res = load("pymc_static_fit.mat")
-% res = load("pymc_static_fit_fixTau.mat")
-% res = load("numpyro_static_new.mat")
+
 res = load("numpyro_static_new (4).mat");
-% res = load("numpyro_static_new_subjAP.mat");
 
 
 
 o.exp_type_v = [1 6 7 4 3 2 14 17];
 o.color = [0.4 0.55 0.25; .45 .25 .5;.9 .35 .4; .2 .3 .6; 0 0 0; .86 .45 .1; 0.93 0.74 0.35];
 o.color([14 17],:) = [.6 .35 .2; [1 1 1]*.3];
-% true_AP = [.65 .5 .65 .65 0 .65 .5];
 true_AP = [.65 .5 .65 .65 0 .65 .5 0 0 0 0 0 0 .65 0 0 .65];
 
 %%

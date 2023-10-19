@@ -6,22 +6,11 @@ set(0,'DefaultFigureWindowStyle','docked')
 
 %% load in data
 
-curren_dir  = pwd;
-idcs   = strfind(curren_dir,'\');
-parent_dir = curren_dir(1:idcs(end)-1);
-addpath(parent_dir)
-
+include_General
 data_ = data_reader;
 
 %% load in fit
-% load("pymc_static_fit.mat")
-% res = load("pymc_static_fit_fixTau.mat")
-% res2 = load("numpyro_static (1).mat")
-% res2 = load("numpyro_static_old.mat")
-
-% res = load("numpyro_static_new.mat");
 res = load("numpyro_static_new (4).mat");
-% res = load("numpyro_static_new2.mat");
 
 par.a = res.global_.a(1);
 par.b = res.global_.b(1);
