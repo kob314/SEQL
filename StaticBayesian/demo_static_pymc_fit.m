@@ -1,10 +1,13 @@
-clear all
-close all
-set(0,'DefaultFigureWindowStyle','docked')
+% clear all
+% close all
+% set(0,'DefaultFigureWindowStyle','docked')
 
 
-res = load("numpyro_static_new (4).mat");
+include_General
+data_ = data_reader;
 
+% res = load("numpyro_static_new (4).mat");
+res = load("data_numpyro_static_new_subjAP_ysc2.mat")
 
 
 o.exp_type_v = [1 6 7 4 3 2 14 17];
@@ -24,7 +27,6 @@ for ie = o.exp_type_v
 end
 op_pair_effect = obj_bias(ob_pair_m(:,2)) - obj_bias(ob_pair_m(:,1)); 
 op_pair_effect = op_pair_effect*0;
-
 
 subj_AP = cell2mat(arrayfun(@(ie) arrayfun(@(is) DATA_EXP(ie).subj(is).subj_AP, DATA_EXP(ie).incl_subj), o.exp_type_v,'UniformOutput',false))';
 
@@ -49,6 +51,7 @@ nu_S = accumarray(res.subj_struct(:,1)+1, aux_nu,[],@std)'./sqrt(q_L);
 % nu_M = true_AP-q_M+.5;
 
 % o.exp_type_v = [1 6 7 14 17];
+figure
 t=tiledlayout(1,1,'Units','pixels','InnerPosition',[100 100 500 500])
 
 nexttile(t)
@@ -82,7 +85,7 @@ axis square
 set(gca,'LineWidth',2,'FontSize',26,'FontName','Calibri Light')
 box off
 
-exportgraphics(t,'figures\demo_statBayes_params.emf','ContentType','vector')
+% exportgraphics(t,'figures\demo_statBayes_params.emf','ContentType','vector')
 % exportgraphics(t,'figures\demo_statBayes_params_poster.emf','ContentType','vector')
 rt
 %%

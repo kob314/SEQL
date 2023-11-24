@@ -11,6 +11,7 @@ data_ = data_reader;
 
 %% load in fit
 res = load("numpyro_static_new (4).mat");
+% res = load("data_numpyro_static_new_subjAP_ysc2.mat");
 
 par.a = res.global_.a(1);
 par.b = res.global_.b(1);
@@ -57,10 +58,11 @@ data = data_conv(data_,o);
 close
 o.n_bins_y=4;
 
+y_min = 0.03;
 data__ = data;
 for ie = o.exp_type_v
     for is = data(ie).incl_subj
-        data(ie).subj(is).y  = (data(ie).subj(is).y - min(data(ie).subj(is).y(o.interval)))/(max(data(ie).subj(is).y(o.interval)) - min(data(ie).subj(is).y(o.interval)))*(1-0.025) + 0.025;
+        data(ie).subj(is).y  = (data(ie).subj(is).y - min(data(ie).subj(is).y(o.interval)))/(max(data(ie).subj(is).y(o.interval)) - min(data(ie).subj(is).y(o.interval)))*(1-y_min) + y_min;
         data(ie).subj(is).yz = sign(data(ie).subj(is).yz).*data(ie).subj(is).y;
         data(ie).subj(is).y_min_max = [0.025 1];
     end
@@ -159,7 +161,7 @@ end
 % exportgraphics(t,'figures\fitQual_new.emf')
 % exportgraphics(t,'figures\fitQual_new_poster.emf')
 
-
+return
 %%
 % close all
 figure(2)

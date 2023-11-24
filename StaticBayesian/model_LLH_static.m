@@ -17,9 +17,9 @@ distr = pre_calc_data_generator_static( par, data_in, o);
 % % data_in.past_r = data_in.past_r(:,o.interval);
 
 %% noise over trials
-auxx=abs(data_in.y);
-auxx=(auxx-min(auxx))/(max(auxx)-min(auxx));
-auxx=auxx.^par.a;
+auxx = data_in.y;
+auxx = (auxx-min(auxx))/(max(auxx)-min(auxx));
+auxx = auxx.^par.a;
 mu_v = 2*(data_in.z-.5).* (auxx*par.c+par.b);
 
 lP_x_G_tr = -(distr.grid.x-mu_v).^2/2;
