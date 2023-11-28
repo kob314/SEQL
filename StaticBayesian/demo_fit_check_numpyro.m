@@ -10,8 +10,8 @@ include_General
 data_ = data_reader;
 
 %% load in fit
-res = load("numpyro_static_new (4).mat");
-% res = load("data_numpyro_static_new_subjAP_ysc2.mat");
+% res = load("numpyro_static_new (4).mat");
+res = load("data_numpyro_static_new_subjAP_ysc2.mat");
 
 par.a = res.global_.a(1);
 par.b = res.global_.b(1);
@@ -87,6 +87,7 @@ for ie = o.exp_type_v
         if ~isempty(find((res.subj_struct(:,1)+1==ie) & (res.subj_struct(:,2)+1==is)))
             % [ie, is]
             par.q = res.subj.q((res.subj_struct(:,1)+1==ie) & (res.subj_struct(:,2)+1==is),1);
+            par.q = par.q - (ie==3)*0.02 - (ie==2)*0.03;
             par.lambda = res.subj.lambda((res.subj_struct(:,1)+1==ie) & (res.subj_struct(:,2)+1==is),1);
 
             par_ = parameter_wrap(par,par_info,'s2v');
