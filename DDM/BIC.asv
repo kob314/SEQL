@@ -131,6 +131,12 @@ for model = 1:5
 
 
             load(['data_res_basedonBayes_complex.mat']);
+            par_=par_m(1,:);
+            %     par_=[0.4981    3.7545    0.2613    0.0044    0.0748    0.6426   14.1470    1.0901    0.6159    0.1994    0.0622];
+            [nlLH(1) pp] = nlLH_DDM_basedonStaticBayes_new(par_,par_info,data_in,o);
+            BIC_(model) = length(par_)*log(size(pp,3))+2*nlLH(model);
+            BIC_10(model) = length(par_)*log(size(pp,3))+2*nlLH(model);
+
 
         case 2
 
@@ -146,6 +152,10 @@ for model = 1:5
                 't0_lsig' ,1, ...
                 'l'       ,1);
             load(['data_res_basedonBayes_simple_v2.mat'])
+            par_=par_m(1,:);
+            [nlLH(2) pp] = nlLH_DDM_basedonStaticBayes_new(par_,par_info,data_in,o);
+            BIC_(model) = length(par_)*log(size(pp,3))+2*nlLH(model);
+
 
         case 3
 
@@ -159,6 +169,9 @@ for model = 1:5
                 't0_lsig' ,1, ...
                 'l'       ,1);
             load(['data_res_basedonBayes_complex_noPast.mat'])
+            par_=par_m(1,:);
+            [nlLH(3) pp] = nlLH_DDM_basedonStaticBayes_new(par_,par_info,data_in,o);
+            BIC_(model) = length(par_)*log(size(pp,3))+2*nlLH(model);
 
         case 4
 
@@ -172,7 +185,9 @@ for model = 1:5
                 't0_lsig' ,1, ...
                 'l'       ,1);
             load(['data_res_basedonBayes_simple_noPast_v2.mat'])
-
+            par_=par_m(1,:);
+            [nlLH(4) pp] = nlLH_DDM_basedonStaticBayes_new(par_,par_info,data_in,o);
+            BIC_(model) = length(par_)*log(size(pp,3))+2*nlLH(model);
 
         case 5
 
@@ -185,20 +200,18 @@ for model = 1:5
                 't0_lsig' ,1, ...
                 'l'       ,1);
             load(['data_res_basedonBayes_onlyPast.mat'])
+            par_=par_m(1,:);
+            [nlLH(5) pp] = nlLH_DDM_basedonStaticBayes_new(par_,par_info,data_in,o);
+            BIC_(model) = length(par_)*log(size(pp,3))+2*nlLH(model);
 
     end
-    par_=par_m(1,:);
-    [nlLH(model) pp] = nlLH_DDM_basedonStaticBayes_new(par_,par_info,data_in,o);
-    BIC_(model) = length(par_)*log(size(pp,3))+2*nlLH(model);
-    BIC_10(model) = length(par_)*log(size(pp,3))/log(10)+2*nlLH(model)/log(10);
 end
 
 %%
 lLH = -nlLH;
 dLH = lLH-min(lLH)
 
-% BICp = -BIC_;
-BICp = -BIC_10;
+BICp = -BIC_;
 dBIC = BICp-min(BICp)
 
 % X = categorical({'complex w STSE','simple w STSE','complex wo STSE','simple wo STSE','only STSE'});
@@ -209,7 +222,7 @@ dBIC = BICp-min(BICp)
 bar([1:5],dBIC,'EdgeColor','none')
 % bar([1:5],dLH,'EdgeColor','none')
 text([1:5],[1 1 1 1 1]*1750,string(round(dBIC)),'HorizontalAlignment','center')
-axis([.5 5.5 0 1000])
+axis([.5 5.5 0 2000])
 ylabel('\Delta BIC')
 xticklabels({'complex w STSE','simple w STSE','complex wo STSE','simple wo STSE','only STSE'})
 box off

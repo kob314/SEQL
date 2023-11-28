@@ -4,19 +4,15 @@ function [nlLH p] = nlLH_DDM_basedonStaticBayes_new(par_v,par_info,data_in,o)
 par = parameter_wrap(par_v,par_info,'v2s');
 
 
-
 if ~isfield(par,'s')
     w_bias =  .5;
     v_bias =   0;
 elseif isfield(par,'wb')
     % %% bias transformation
     % bn = data_in.bias_M + par.s;
-    bn = sign(data_in.bias_M).*abs(data_in.bias_M) .^ par.s;
     % %% v and w computation
     % w_bias =  par.wb * bn +.5;
     % v_bias =  par.vb * bn;
-    w_bias =  par.wb * bn +.5;
-    v_bias =  sign(par.wb)*par.vb * bn;
     
 else
     %% AP(q)-RV(nu) transformation
@@ -47,6 +43,5 @@ nlLH = -sum(log(p(data_in.p_idx)));
 if isinf(nlLH)
     nlLH = 10^10;
 end
-
 
 
