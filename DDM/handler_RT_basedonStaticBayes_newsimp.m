@@ -116,7 +116,7 @@ REP = 5
 
 %%
 % model = 5
-for model=1:5
+for model=[2 4]
     switch model
         case 1
             par_info = struct( ...
@@ -147,8 +147,12 @@ for model=1:5
                 't0_lsig' ,1, ...
                 'l'       ,1);
             %       wb   vb      s   kv  kw   va  a t0 t0l  l
-            l_v = [ -2  -10    -.5   -2  -2   1 .5 .1 .02  0];
-            u_v = [  2   10     .5    2   2  20  3  1 .3 .5];
+            % l_v = [ -2  -10   -.5   -2  -2   1 .5 .1 .02  0];
+            % u_v = [  2   10    .5    2   2  20  3  1 .3 .5];
+
+            %       wb   vb    s   kv  kw   va  a t0 t0l  l
+            l_v = [ -2    0   .2   -2  -2   1  .5 .1 .02  0];
+            u_v = [  2   10    5     2   2  20  3  1  .3   .5];
 
         case 3
             par_info = struct( ...
@@ -174,8 +178,11 @@ for model=1:5
                 't0_lsig' ,1, ...
                 'l'       ,1);
             %       wb   vb      s    va  a t0 t0l  l
-            l_v = [ -2  -10    -.5   1 .5 .1 .02  0];
-            u_v = [  2   10     .5  20  3  1 .3 .5];
+            % l_v = [ -2  -10    -.5   1 .5 .1 .02  0];
+            % u_v = [  2   10     .5  20  3  1 .3 .5];
+
+            l_v = [ -2    0    .2   1 .5 .1 .02  0];
+            u_v = [  2   10     5  20  3  1 .3 .5];
         case 5
             par_info = struct( ...
                 'kappa_w' ,1, ...
@@ -211,11 +218,11 @@ for model=1:5
         case 1
             save(['data_res_basedonBayes_complex.mat'],'par_m','fval_v')
         case 2
-            save(['data_res_basedonBayes_simple.mat'],'par_m','fval_v')
+            save(['data_res_basedonBayes_simple_v2.mat'],'par_m','fval_v')
         case 3
             save(['data_res_basedonBayes_complex_noPast.mat'],'par_m','fval_v')
         case 4
-            save(['data_res_basedonBayes_simple_noPast.mat'],'par_m','fval_v')
+            save(['data_res_basedonBayes_simple_noPast_v2.mat'],'par_m','fval_v')
         case 5
             save(['data_res_basedonBayes_onlyPast.mat'],'par_m','fval_v')
     end

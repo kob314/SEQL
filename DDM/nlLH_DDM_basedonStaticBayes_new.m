@@ -3,8 +3,6 @@ function [nlLH p] = nlLH_DDM_basedonStaticBayes_new(par_v,par_info,data_in,o)
 % par_v
 par = parameter_wrap(par_v,par_info,'v2s');
 
-
-
 if ~isfield(par,'s')
     w_bias =  .5;
     v_bias =   0;
