@@ -117,10 +117,9 @@ REP = 5
 
 %%
 % model = 5
-for model=2
-    data_ = data_reader;
-    data = data_conv(data_,o);
+for model=1:2
     switch model
+
         case 1
 
             res  = load("data_numpyro_static_new_subjAP_ysc2_ym3_simpleAP.mat"); % load numpyro data with ysc=2 (P(y) ~ y^-ysc; when ysc=2 then it is equal to the Test ground truth)
@@ -157,6 +156,9 @@ for model=2
             past_r(isnan(past_r)) = 0;
             data_in.STSE = weight_ST*past_r;
 
+            %% discretize time and choice+time distribution
+            data_in.rt_norm_idx = discretize(data_in.rt_norm,o.bins_rt);
+            data_in.p_idx = sub2ind([o.N_grid_rt,2,length(data_in.r)],data_in.rt_norm_idx, data_in.r+1, 1:length(data_in.r));
 
             %% throw away data where response is nan
             idx_excl = isnan(data_in.r);
@@ -164,10 +166,6 @@ for model=2
             for ifn = 1:length(fn)
                 data_in.(fn{ifn}) = data_in.(fn{ifn})(:,~idx_excl);
             end
-
-            %% discretize time and choice+time distribution
-            data_in.rt_norm_idx = discretize(data_in.rt_norm,o.bins_rt);
-            data_in.p_idx = sub2ind([o.N_grid_rt,2,length(data_in.r)],data_in.rt_norm_idx, data_in.r+1, 1:length(data_in.r));
 
 
             count=0;
@@ -236,6 +234,9 @@ for model=2
             past_r(isnan(past_r)) = 0;
             data_in.STSE = weight_ST*past_r;
 
+            %% discretize time and choice+time distribution
+            data_in.rt_norm_idx = discretize(data_in.rt_norm,o.bins_rt);
+            data_in.p_idx = sub2ind([o.N_grid_rt,2,length(data_in.r)],data_in.rt_norm_idx, data_in.r+1, 1:length(data_in.r));
 
             %% throw away data where response is nan
             idx_excl = isnan(data_in.r);
@@ -243,10 +244,6 @@ for model=2
             for ifn = 1:length(fn)
                 data_in.(fn{ifn}) = data_in.(fn{ifn})(:,~idx_excl);
             end
-
-            %% discretize time and choice+time distribution
-            data_in.rt_norm_idx = discretize(data_in.rt_norm,o.bins_rt);
-            data_in.p_idx = sub2ind([o.N_grid_rt,2,length(data_in.r)],data_in.rt_norm_idx, data_in.r+1, 1:length(data_in.r));
 
             count=0;
             for ie = o.exp_type_v

@@ -207,7 +207,7 @@ for model=[2 4]
             init_v(i) = rand*(u_v(i)-l_v(i))+l_v(i);
         end
 
-        [par_,fval,exitflag,output] = bads(@(x) nlLH_DDM_basedonStaticBayes_new(x,par_info,data_in,o),init_v,l_v,u_v,[],[],[],options);
+        [par_,fval,exitflag,output] = bads(@(x) nlLH_DDM_basedonStaticBayes(x,par_info,data_in,o),init_v,l_v,u_v,[],[],[],options);
 
         par_m(rep,:) = par_
         fval_v(rep)  = fval

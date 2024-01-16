@@ -1,27 +1,22 @@
-function [nlLH p] = nlLH_DDM_basedonStaticBayes_new(par_v,par_info,data_in,o)
+function [nlLH p] = nlLH_DDM_basedonStaticBayes_newsimp(par_v,par_info,data_in,o)
 
-% par_v
 par = parameter_wrap(par_v,par_info,'v2s');
 
 if ~isfield(par,'s')
     w_bias =  .5;
     v_bias =   0;
-elseif isfield(par,'wb')
-    % %% bias transformation
-    % bn = data_in.bias_M + par.s;
-    bn = sign(data_in.bias_M).*abs(data_in.bias_M) .^ par.s;
-    % %% v and w computation
-    % w_bias =  par.wb * bn +.5;
-    % v_bias =  par.vb * bn;
-    w_bias =  par.wb * bn +.5;
-    v_bias =  sign(par.wb)*par.vb * bn;
     
-else
+elseif isfield(par,'w')
     %% AP(q)-RV(nu) transformation
-    qn  = data_in.q_M   + data_in.shift*par.s;
-    nun = data_in.nu_M  - data_in.shift*par.s;
+    qn  = (data_in.q_M-0.5)*par.s + 0.5;
     %% v and w computation
     w_bias =  par.w * (qn-.5) + .5;
+    v_bias = 0;
+elseif isfield(par,'v')
+    %% AP(q)-RV(nu) transformation
+    nun = (data_in.nu_M -0.5) *par.s+.5;
+    %% v and w computation
+    w_bias =  .5;
     v_bias = -par.v * (nun-.5);
 end
 
@@ -39,12 +34,11 @@ v     = par.a*v_aux;
 %% probability distributions
 p = wfpt_t0noise_vec(reshape(v,1,1,[]),reshape(w,1,1,[]),par.a,par.t0,par.t0_lsig,par.l,o.grid_t,o.k);
 
-
+% size(p)
+% prod(size(p))
+% max(data_in.p_idx)
 nlLH = -sum(log(p(data_in.p_idx)));
 
 if isinf(nlLH)
     nlLH = 10^10;
 end
-
-
-

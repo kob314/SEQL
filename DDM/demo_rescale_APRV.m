@@ -27,21 +27,30 @@ cos_t = cos(tt);
 
 o.exp_type_v = [7 1 4 6 3 2];
 % o.exp_type_v = [1 4 6 3];
-for j = 1:4
+for j = 1:2
 
-    res0 = load('data_numpyro_static_new_subjAP_ysc2.mat');
-    % res0 = load('data_numpyro_static_new_subjAP_ysc2_ym3.mat');
-    % res0 = load('numpyro_static_new (4).mat');
+    % res0 = load('data_numpyro_static_new_subjAP_ysc2.mat');
+    % % res0 = load('data_numpyro_static_new_subjAP_ysc2_ym3.mat');
+    % % res0 = load('numpyro_static_new (4).mat');
+    % 
+    % switch j
+    %     case 1
+    %         res1 = load('data_numpyro_static_new_subjAP_ysc1.mat');
+    %     case 2
+    %         res1 = load('data_numpyro_static_new_subjAP_ysc15.mat')
+    %     case 3
+    %         res1 = load('data_numpyro_static_new_subjAP_ysc25.mat');
+    %     case 4
+    %         res1 = load('data_numpyro_static_new_subjAP_ysc3.mat');
+    % end
 
+
+    res0 = load('data_numpyro_static_new_subjAP_ysc2_ym3_simpleAP.mat');
     switch j
         case 1
-            res1 = load('data_numpyro_static_new_subjAP_ysc1.mat');
+            res1 = load('data_numpyro_static_new_subjAP_ysc1_ym3_simpleAP.mat');
         case 2
-            res1 = load('data_numpyro_static_new_subjAP_ysc15.mat')
-        case 3
-            res1 = load('data_numpyro_static_new_subjAP_ysc25.mat');
-        case 4
-            res1 = load('data_numpyro_static_new_subjAP_ysc3.mat');
+            res1 = load('data_numpyro_static_new_subjAP_ysc3_ym3_simpleAP.mat');
     end
 
     for i = 1:2
@@ -68,6 +77,7 @@ for j = 1:4
     end
 
     plot(q_(1).M(o.exp_type_v),q_(2).M(o.exp_type_v),'g','LineWidth',2)
+     % plot(q_(1).M(o.exp_type_v),(q_(1).M(o.exp_type_v)-.5)*1.5+.5,'g','LineWidth',2)
     scatter(q_(1).M(o.exp_type_v),q_(2).M(o.exp_type_v),180,o.color(o.exp_type_v,:),'filled')
     for ie = o.exp_type_v
         fill(q_(1).M(ie)+q_(1).S(ie).*sin_t',q_(2).M(ie)+q_(2).S(ie).*cos_t',o.color(ie,:),'FaceAlpha',.2,'EdgeColor','none')%,o.color(ie,:),'EdgeAlpha',.2)
@@ -82,6 +92,7 @@ xticks(.1:.1:.9)
 yticks(.1:.1:.9)
 % d=.11;
 d=.09;
+d=.25;
 axis([-d d -d d]+.535)
 axis square
 set(gca,'LineWidth',2,'FontSize',26,'FontName','Calibri Light')
@@ -137,6 +148,8 @@ yticks([.1:.2:.9])
 % xticks([.5:.15:.9])
 % yticks([.5:.15:.9])
 d=.2
+
+d=1
 axis([-d d -d d]+.5)
 % axis([.42 .68 .42 .68])
 axis square

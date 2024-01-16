@@ -277,10 +277,9 @@ end
 lLH = -nlLH;
 dLH = lLH-min(lLH)
 
-BICp = -BIC_;
-% BICp = -BIC_10;
+% BICp = -BIC_;
+BICp = -BIC_10;
 dBIC = BICp-min(BICp)+10
-
 
 % X = categorical({'complex w STSE','simple w STSE','complex wo STSE','simple wo STSE','only STSE'});
 % X = reordercats(X,{'complex w STSE','simple w STSE','complex wo STSE','simple wo STSE','only STSE'});
@@ -293,10 +292,7 @@ text([1:length(dBIC)],ones(size(dBIC))*1750,string(round(dBIC)),'HorizontalAlign
 % axis([.5 5.5 0 1000])
 d = .5
 % axis([1-d length(dBIC)+d 0 ceil(max(dBIC/10)*1.1)*10])
-% axis([1-d length(dBIC)+d 0 160])
-% yticks([0:50:300]+10); yticklabels(string(0:50:300))
-
-axis([1-d length(dBIC)+d 0 350])
+axis([1-d length(dBIC)+d 0 160])
 yticks([0:50:300]+10); yticklabels(string(0:50:300))
 hold on; plot([0 length(dBIC)+1],[0 0]+10,'k','LineWidth',3)
 ylabel('\Delta BIC')
