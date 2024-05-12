@@ -11,18 +11,14 @@ for ie = o.exp_type_v
 
         data_out(ie).subj(is).z       = data_in.test__.exp_num(ie).subj_num(is).trial_v;
         data_out(ie).subj(is).r       = data_in.test__.exp_num(ie).subj_num(is).response_v;
-%         data_out(ie).subj(is).r       = data_out(ie).subj(is).z;
-%         data_out(ie).subj(is).r       = data_out(ie).subj(is).r( randperm( length(data_out(ie).subj(is).r) ) )
-%         aux = rand(size(data_out(ie).subj(is).z)) < .8;
-%         data_out(ie).subj(is).r       = data_out(ie).subj(is).z .* aux +(1-aux) .* rand(size(data_out(ie).subj(is).z))
         data_out(ie).subj(is).correct = 1-abs(data_out(ie).subj(is).z - data_out(ie).subj(is).r);
         data_out(ie).subj(is).rt      = data_in.test__.exp_num(ie).subj_num(is).reac_t_v;
 
-        if isfield(data_in.train2.exp_num(ie).subj_num(is),'trial_v')
-            data_out(ie).last_jump_type(is) = mean( data_in.train2.exp_num(ie).subj_num(is).trial_v(70:90)) > .5; 
-        else
-            data_out(ie).last_jump_type(is) = nan;
-        end
+        % if isfield(data_in.train2.exp_num(ie).subj_num(is),'trial_v')
+        %     data_out(ie).last_jump_type(is) = mean( data_in.train2.exp_num(ie).subj_num(is).trial_v(70:90)) > .5; 
+        % else
+        %     data_out(ie).last_jump_type(is) = nan;
+        % end
 
         for i=1:2
 
@@ -55,8 +51,6 @@ for ie = o.exp_type_v
             gamma_v = gamma_v/10;
         end
         gamma_v(gamma_v<1) = 1;  %% fitting is such
-%         gamma_v = gamma_v-1;
-%         data_out(ie).subj(is).y = 1./(1+gamma_v);
         data_out(ie).subj(is).y = 1./gamma_v;
 
         data_out(ie).subj(is).y_min_max = [min(data_out(ie).subj(is).y) max(data_out(ie).subj(is).y)];

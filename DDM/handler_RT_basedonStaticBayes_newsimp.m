@@ -24,50 +24,28 @@ o.grid_t = (o.bins_rt(1:end-1)+o.bins_rt(2:end))/2;  %   RT grid
 % o.k=21;
 o.k=15;  % Navarro Fuss Taylor expansion order
 
-% %% pooling the data
-% 
-% data_in.e  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).z(o.include)*0+ie, data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false)); % experimental condition
-% data_in.s  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).z(o.include)*0+is, data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false)); % subject id
-% data_in.z  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).z(o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));      
-% data_in.r  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).r(o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
-% data_in.past_r  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).past_r(:,o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
-% y_min = 0.03;
-% data_in.y       = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).y(o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false)); % raw y
-% data_in.y_norm  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) (data(ie).subj(is).y(o.include)-min(data(ie).subj(is).y(o.include)))/(max(data(ie).subj(is).y(o.include))-min(data(ie).subj(is).y(o.include)))*(1-y_min) + y_min, data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false)); % y scaled as in the numpyro code
-% data_in.y  = data_in.y_norm;
-% data_in.yz = (data_in.z-.5).*data_in.y*2;
-% data_in.rt = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).rt(o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
-% data_in.rt_norm = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).rt(o.include)/nanmean(data(ie).subj(is).rt(o.include)), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
-% 
-% %% throw away out extremely small and large reaction times 
-% rt_cuts = prctile(data_in.rt_norm,[1 99]);
-% data_in.r(data_in.rt_norm<max(rt_cuts(1),0)) = nan;
-% data_in.r(data_in.rt_norm>rt_cuts(2)) = nan;
-% 
-% rt_expcond = accumarray(data_in.e',data_in.rt',[max(o.exp_type_v) 1],@nanmean)';
-% data_in.rt_norm = data_in.rt_norm.*nanmean(data_in.rt); % the experimental conditions' avg RT is unchanged after all the transformations 
-% 
-% 
-% %% compute STSE variable
-% tau = res.global_.tau(1);%0.17;
-% weight_ST  = exp(-tau*[1:o.n_back]);
-% weight_ST  = weight_ST/sum(weight_ST);
-% past_r = (data_in.past_r-.5)*2;
-% past_r(isnan(past_r)) = 0;
-% data_in.STSE = weight_ST*past_r;
-% 
-% %% throw away data where response is nan
-% idx_excl = isnan(data_in.r);
-% fn = fields(data_in);
-% for ifn = 1:length(fn)
-%     data_in.(fn{ifn}) = data_in.(fn{ifn})(:,~idx_excl);
-% end
-% 
-% 
-% %% discretize time and choice+time distribution
-% data_in.rt_norm_idx = discretize(data_in.rt_norm,o.bins_rt);
-% data_in.p_idx = sub2ind([o.N_grid_rt,2,length(data_in.r)],data_in.rt_norm_idx, data_in.r+1, 1:length(data_in.r));
+%% pooling the data
 
+data_in.e  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).z(o.include)*0+ie, data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false)); % experimental condition
+data_in.s  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).z(o.include)*0+is, data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false)); % subject id
+data_in.z  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).z(o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
+data_in.r  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).r(o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
+data_in.past_r  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).past_r(:,o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
+y_min = 0.03;
+data_in.y       = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).y(o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false)); % raw y
+data_in.y_norm  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) (data(ie).subj(is).y(o.include)-min(data(ie).subj(is).y(o.include)))/(max(data(ie).subj(is).y(o.include))-min(data(ie).subj(is).y(o.include)))*(1-y_min) + y_min, data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false)); % y scaled as in the numpyro code
+data_in.y  = data_in.y_norm;
+data_in.yz = (data_in.z-.5).*data_in.y*2;
+data_in.rt = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).rt(o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
+data_in.rt_norm = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).rt(o.include)/nanmean(data(ie).subj(is).rt(o.include)), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
+
+%% throw away out extremely small and large reaction times
+rt_cuts = prctile(data_in.rt_norm,[1 99]);
+data_in.r(data_in.rt_norm<max(rt_cuts(1),0)) = nan;
+data_in.r(data_in.rt_norm>rt_cuts(2)) = nan;
+
+rt_expcond = accumarray(data_in.e',data_in.rt',[max(o.exp_type_v) 1],@nanmean)';
+data_in.rt_norm = data_in.rt_norm.*nanmean(data_in.rt); % the experimental conditions' avg RT is unchanged after all the transformations
 
 
 %% subjective AP & RV
@@ -113,76 +91,74 @@ subj_AP = cell2mat(arrayfun(@(ie) arrayfun(@(is) DATA_EXP(ie).subj(is).subj_AP, 
 options.UncertaintyHandling = 0;    % Tell BADS that the objective is noisy
 options.MaxIter = 200;%150;
 options.MaxFunEvals = 500;
-REP = 5
+REP = 3;
 
 %%
-% model = 5
-for model=2
-    data_ = data_reader;
-    data = data_conv(data_,o);
+for model=1
+    data_inx = data_in;
+
     switch model
         case 1
-
+            res  = load("data_numpyro_static_new_subjAP_ysc2_ym3.mat"); % load numpyro data with ysc=2 (P(y) ~ y^-ysc; when ysc=2 then it is equal to the Test ground truth)            
+        case 1
             res  = load("data_numpyro_static_new_subjAP_ysc2_ym3_simpleAP.mat"); % load numpyro data with ysc=2 (P(y) ~ y^-ysc; when ysc=2 then it is equal to the Test ground truth)
+        case 2
+            res  = load("data_numpyro_static_new_subjAP_ysc2_ym3_simpleRV.mat"); % load numpyro data with ysc=2 (P(y) ~ y^-ysc; when ysc=2 then it is equal to the Test ground truth)
+    end
 
-            %% pooling the data
-
-            data_in.e  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).z(o.include)*0+ie, data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false)); % experimental condition
-            data_in.s  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).z(o.include)*0+is, data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false)); % subject id
-            data_in.z  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).z(o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
-            data_in.r  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).r(o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
-            data_in.past_r  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).past_r(:,o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
-            y_min = 0.03;
-            data_in.y       = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).y(o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false)); % raw y
-            data_in.y_norm  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) (data(ie).subj(is).y(o.include)-min(data(ie).subj(is).y(o.include)))/(max(data(ie).subj(is).y(o.include))-min(data(ie).subj(is).y(o.include)))*(1-y_min) + y_min, data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false)); % y scaled as in the numpyro code
-            data_in.y  = data_in.y_norm;
-            data_in.yz = (data_in.z-.5).*data_in.y*2;
-            data_in.rt = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).rt(o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
-            data_in.rt_norm = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).rt(o.include)/nanmean(data(ie).subj(is).rt(o.include)), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
-
-            %% throw away out extremely small and large reaction times
-            rt_cuts = prctile(data_in.rt_norm,[1 99]);
-            data_in.r(data_in.rt_norm<max(rt_cuts(1),0)) = nan;
-            data_in.r(data_in.rt_norm>rt_cuts(2)) = nan;
-
-            rt_expcond = accumarray(data_in.e',data_in.rt',[max(o.exp_type_v) 1],@nanmean)';
-            data_in.rt_norm = data_in.rt_norm.*nanmean(data_in.rt); % the experimental conditions' avg RT is unchanged after all the transformations
+    %% compute STSE variable
+    tau = res.global_.tau(1);%0.17;
+    weight_ST  = exp(-tau*[1:o.n_back]);
+    weight_ST  = weight_ST/sum(weight_ST);
+    past_r = (data_inx.past_r-.5)*2;
+    past_r(isnan(past_r)) = 0;
+    data_inx.STSE = weight_ST*past_r;
 
 
-            %% compute STSE variable
-            tau = res.global_.tau(1);%0.17;
-            weight_ST  = exp(-tau*[1:o.n_back]);
-            weight_ST  = weight_ST/sum(weight_ST);
-            past_r = (data_in.past_r-.5)*2;
-            past_r(isnan(past_r)) = 0;
-            data_in.STSE = weight_ST*past_r;
+    %% throw away data where response is nan
+    idx_excl = isnan(data_inx.r);
+    fn = fields(data_inx);
+    for ifn = 1:length(fn)
+        data_inx.(fn{ifn}) = data_inx.(fn{ifn})(:,~idx_excl);
+    end
+
+    %% discretize time and choice+time distribution
+    data_inx.rt_norm_idx = discretize(data_inx.rt_norm,o.bins_rt);
+    data_inx.p_idx = sub2ind([o.N_grid_rt,2,length(data_inx.r)],data_inx.rt_norm_idx, data_inx.r+1, 1:length(data_inx.r));
+
+    count=0;
+    for ie = o.exp_type_v
+        for is = data(ie).incl_subj
+            q_M(data_inx.e == ie & data_inx.s == is) = res.subj.q(ie == (res.subj_struct(:,1)+1) & is == (res.subj_struct(:,2)+1),1);
+            nu_M(data_inx.e == ie & data_inx.s == is) = 0.5;
+        end
+        shift_(data_inx.e==ie) = ~ismember(ie,[2,7]);
+    end
+
+    data_inx.q_M    = q_M;
+    data_inx.nu_M   = nu_M;
+    data_inx.shift  = shift_;
 
 
-            %% throw away data where response is nan
-            idx_excl = isnan(data_in.r);
-            fn = fields(data_in);
-            for ifn = 1:length(fn)
-                data_in.(fn{ifn}) = data_in.(fn{ifn})(:,~idx_excl);
-            end
+    switch model
+        case 1
+            par_info = struct( ...
+                'w'       ,1, ...
+                'v'       ,1,...
+                's'       ,1, ...% 'kappa_w' ,1, ...% 'kappa_v' ,1, ...
+                'v_amp'   ,1, ...
+                'a'       ,1, ...
+                't0'      ,1, ...
+                't0_lsig' ,1, ...
+                'l'       ,1);
 
-            %% discretize time and choice+time distribution
-            data_in.rt_norm_idx = discretize(data_in.rt_norm,o.bins_rt);
-            data_in.p_idx = sub2ind([o.N_grid_rt,2,length(data_in.r)],data_in.rt_norm_idx, data_in.r+1, 1:length(data_in.r));
-
-
-            count=0;
-            for ie = o.exp_type_v
-                for is = data(ie).incl_subj
-                    q_M(data_in.e == ie & data_in.s == is) = res.subj.q(ie == (res.subj_struct(:,1)+1) & is == (res.subj_struct(:,2)+1),1);
-                    nu_M(data_in.e == ie & data_in.s == is) = 0.5;
-                end
-                shift_(data_in.e==ie) = ~ismember(ie,[2,7]);
-            end
-
-            data_in.q_M    = q_M;
-            data_in.nu_M   = nu_M;
-            data_in.shift  = shift_;
-
+            % %       w  v     s   kv  kw   va  a t0 t0l  l
+            % l_v = [ 0  0    .5  -2  -2     1 .5 .1 .02  0];
+            % u_v = [ 1  5   1.5   2   2    20  3  1 .3 .5];
+            %       w  v     s     va  a t0 t0l  l
+            l_v = [ 0  0    -.2       1 .5 .1 .02  0];
+            u_v = [ 1  5     .2      20  3  1 .3 .5];
+        case 2
             par_info = struct( ...
                 'w'       ,1, ...
                 's'       ,1, ...
@@ -193,75 +169,11 @@ for model=2
                 't0'      ,1, ...
                 't0_lsig' ,1, ...
                 'l'       ,1);
-            %       wb   vb      s   kv  kw   va  a t0 t0l  l
-            % l_v = [ -2  -10   -.5   -2  -2   1 .5 .1 .02  0];
-            % u_v = [  2   10    .5    2   2  20  3  1 .3 .5];
 
             %       w      s   kv  kw   va  a t0 t0l  l
-            l_v = [ 0     .5  -2  -2     1 .5 .1 .02  0];
-            u_v = [ 1    1.5   2   2    20  3  1 .3 .5];
-
-        case 2
-            res  = load("data_numpyro_static_new_subjAP_ysc2_ym3_simpleRV.mat"); % load numpyro data with ysc=2 (P(y) ~ y^-ysc; when ysc=2 then it is equal to the Test ground truth)
-
-            %% pooling the data
-
-            data_in.e  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).z(o.include)*0+ie, data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false)); % experimental condition
-            data_in.s  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).z(o.include)*0+is, data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false)); % subject id
-            data_in.z  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).z(o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
-            data_in.r  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).r(o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
-            data_in.past_r  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).past_r(:,o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
-            y_min = 0.03;
-            data_in.y       = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).y(o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false)); % raw y
-            data_in.y_norm  = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) (data(ie).subj(is).y(o.include)-min(data(ie).subj(is).y(o.include)))/(max(data(ie).subj(is).y(o.include))-min(data(ie).subj(is).y(o.include)))*(1-y_min) + y_min, data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false)); % y scaled as in the numpyro code
-            data_in.y  = data_in.y_norm;
-            data_in.yz = (data_in.z-.5).*data_in.y*2;
-            data_in.rt = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).rt(o.include), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
-            data_in.rt_norm = cell2mat(arrayfun(@(ie) cell2mat( arrayfun(@(is) data(ie).subj(is).rt(o.include)/nanmean(data(ie).subj(is).rt(o.include)), data(ie).incl_subj, 'UniformOutput', false) ), o.exp_type_v, 'UniformOutput', false));
-
-            %% throw away out extremely small and large reaction times
-            rt_cuts = prctile(data_in.rt_norm,[1 99]);
-            data_in.r(data_in.rt_norm<max(rt_cuts(1),0)) = nan;
-            data_in.r(data_in.rt_norm>rt_cuts(2)) = nan;
-
-            rt_expcond = accumarray(data_in.e',data_in.rt',[max(o.exp_type_v) 1],@nanmean)';
-            data_in.rt_norm = data_in.rt_norm.*nanmean(data_in.rt); % the experimental conditions' avg RT is unchanged after all the transformations
-
-
-            %% compute STSE variable
-            tau = res.global_.tau(1);%0.17;
-            weight_ST  = exp(-tau*[1:o.n_back]);
-            weight_ST  = weight_ST/sum(weight_ST);
-            past_r = (data_in.past_r-.5)*2;
-            past_r(isnan(past_r)) = 0;
-            data_in.STSE = weight_ST*past_r;
-
-
-            %% throw away data where response is nan
-            idx_excl = isnan(data_in.r);
-            fn = fields(data_in);
-            for ifn = 1:length(fn)
-                data_in.(fn{ifn}) = data_in.(fn{ifn})(:,~idx_excl);
-            end
-
-            %% discretize time and choice+time distribution
-            data_in.rt_norm_idx = discretize(data_in.rt_norm,o.bins_rt);
-            data_in.p_idx = sub2ind([o.N_grid_rt,2,length(data_in.r)],data_in.rt_norm_idx, data_in.r+1, 1:length(data_in.r));
-
-            count=0;
-            for ie = o.exp_type_v
-                for is = data(ie).incl_subj
-                    q_M(data_in.e == ie & data_in.s == is) = 0.5;
-                    nu_M(data_in.e == ie & data_in.s == is) = res.subj.q(ie == (res.subj_struct(:,1)+1) & is == (res.subj_struct(:,2)+1),1);
-                end
-                shift_(data_in.e==ie) = ~ismember(ie,[2,7]);
-            end
-
-            data_in.q_M    = q_M;
-            data_in.nu_M   = nu_M;
-            data_in.shift  = shift_;
-
-
+            l_v = [ 0     -.2  -2  -2     1 .5 .1 .02  0];
+            u_v = [ 1      .2   2   2    20  3  1 .3 .5];
+        case 3
             par_info = struct( ...
                 'v'       ,1, ...
                 's'       ,1, ...
@@ -272,14 +184,10 @@ for model=2
                 't0'      ,1, ...
                 't0_lsig' ,1, ...
                 'l'       ,1);
-            %       wb   vb      s   kv  kw   va  a t0 t0l  l
-            % l_v = [ -2  -10   -.5   -2  -2   1 .5 .1 .02  0];
-            % u_v = [  2   10    .5    2   2  20  3  1 .3 .5];
 
             %       v      s   kv  kw   va  a t0 t0l  l
-            l_v = [ 0     .5  -2  -2     1 .5 .1 .02  0];
-            u_v = [ 5    1.5   2   2    20  3  1 .3 .5];
-
+            l_v = [ 0     -0.2  -2  -2     1 .5 .1 .02  0];
+            u_v = [ 5      0.2   2   2    20  3  1 .3 .5];
     end
 
 
@@ -291,18 +199,22 @@ for model=2
         for i = 1:length(l_v)
             init_v(i) = rand*(u_v(i)-l_v(i))+l_v(i);
         end
+        % init_v = [0.6476    2.9253    0.0489    9.5661    1.0256    0.6316    0.2063    0.1028];
 
-        [par_,fval,exitflag,output] = bads(@(x) nlLH_DDM_basedonStaticBayes_newsimp(x,par_info,data_in,o),init_v,l_v,u_v,[],[],[],options);
+        % [par_,fval,exitflag,output] = bads(@(x) nlLH_DDM_basedonStaticBayes_newsimp(x,par_info,data_inx,o),init_v,l_v,u_v,[],[],[],options);
+        [par_,fval,exitflag,output] = bads(@(x) nlLH_DDM_basedonStaticBayes_new(x,par_info,data_inx,o),init_v,l_v,u_v,[],[],[],options);
 
-        par_m(rep,:) = par_
-        fval_v(rep)  = fval
+        par_m(rep,:) = par_;
+        fval_v(rep)  = fval;
     end
 
     
     switch model
         case 1
-            save(['data_res_basedonBayes_simple_AP.mat'],'par_m','fval_v')
+            save(['data_res_basedonBayes_complex_v2_no_past.mat'],'par_m','fval_v')
         case 2
+            save(['data_res_basedonBayes_simple_AP.mat'],'par_m','fval_v')
+        case 3
             save(['data_res_basedonBayes_simple_RV.mat'],'par_m','fval_v')
     end
 end

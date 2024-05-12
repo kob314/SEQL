@@ -16,7 +16,7 @@ true_AP = [.65 .5 .65 .65 0 .65 .5 0 0 0 0 0 0 .65 0 0 .65];
 %%
 load("DATA_EXP4.mat")
 subj_AP = cell2mat(arrayfun(@(ie) arrayfun(@(is) DATA_EXP(ie).subj(is).subj_AP, DATA_EXP(ie).incl_subj), o.exp_type_v,'UniformOutput',false))';
-
+%%
 t=tiledlayout(2,1,'Units','pixels','InnerPosition',[10 10 1000 1000]);
 nexttile(t)
 hold on
@@ -25,19 +25,19 @@ tt    = linspace(0,2*pi,100);
 sin_t = sin(tt);
 cos_t = cos(tt);
 
-o.exp_type_v = [7 1 4 6 3 2];
+o.exp_type_v = [7 1 14 17  4 6 3 2];
 % o.exp_type_v = [1 4 6 3];
 for j = 1:2
 
-    % res0 = load('data_numpyro_static_new_subjAP_ysc2.mat');
-    % % res0 = load('data_numpyro_static_new_subjAP_ysc2_ym3.mat');
-    % % res0 = load('numpyro_static_new (4).mat');
-    % 
+    res0 = load('data_numpyro_static_new_subjAP_ysc2.mat');
+    % res0 = load('data_numpyro_static_new_subjAP_ysc2_ym3.mat');
+    % res0 = load('numpyro_static_new (4).mat');
+
     % switch j
     %     case 1
     %         res1 = load('data_numpyro_static_new_subjAP_ysc1.mat');
     %     case 2
-    %         res1 = load('data_numpyro_static_new_subjAP_ysc15.mat')
+    %         res1 = load('data_numpyro_static_new_subjAP_ysc15.mat');
     %     case 3
     %         res1 = load('data_numpyro_static_new_subjAP_ysc25.mat');
     %     case 4
@@ -52,6 +52,14 @@ for j = 1:2
         case 2
             res1 = load('data_numpyro_static_new_subjAP_ysc3_ym3_simpleAP.mat');
     end
+
+    % res0 = load('data_numpyro_static_new_subjAP_ysc2_ym3_simpleRV.mat');
+    % switch j
+    %     case 1
+    %         res1 = load('data_numpyro_static_new_subjAP_ysc1_ym3_simpleRV.mat');
+    %     case 2
+    %         res1 = load('data_numpyro_static_new_subjAP_ysc3_ym3_simpleRV.mat');
+    % end
 
     for i = 1:2
         switch i
@@ -90,8 +98,8 @@ xlabel('AP')
 xlabel('RV')
 xticks(.1:.1:.9)
 yticks(.1:.1:.9)
-% d=.11;
-d=.09;
+d=.11;
+% d=.09;
 d=.25;
 axis([-d d -d d]+.535)
 axis square

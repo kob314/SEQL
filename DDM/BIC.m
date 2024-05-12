@@ -1,4 +1,3 @@
-
 % fit_handler
 clear all
 close all
@@ -242,7 +241,7 @@ for model = 1:4
             load(['data_res_basedonBayes_simple_RV.mat'])
 
 
-        case 5
+        case 4
 
             par_info = struct( ...
                 'kappa_w' ,1, ...
@@ -279,7 +278,7 @@ dLH = lLH-min(lLH)
 
 BICp = -BIC_;
 % BICp = -BIC_10;
-dBIC = BICp-min(BICp)+10
+dBIC = BICp-min(BICp)
 
 
 % X = categorical({'complex w STSE','simple w STSE','complex wo STSE','simple wo STSE','only STSE'});
@@ -296,8 +295,9 @@ d = .5
 % axis([1-d length(dBIC)+d 0 160])
 % yticks([0:50:300]+10); yticklabels(string(0:50:300))
 
-axis([1-d length(dBIC)+d 0 350])
-yticks([0:50:300]+10); yticklabels(string(0:50:300))
+% axis([1-d length(dBIC)+d 0 350])
+% yticks([0:50:300]+10); yticklabels(string(0:50:300))
+yticks([0:200:700]+10); yticklabels(string(0:200:700))
 hold on; plot([0 length(dBIC)+1],[0 0]+10,'k','LineWidth',3)
 ylabel('\Delta BIC')
 % xticklabels({'complex w STSE','simple w STSE','complex wo STSE','simple wo STSE','only STSE'})
